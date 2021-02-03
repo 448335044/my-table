@@ -3,6 +3,8 @@
   <div class="top">
     <el-button @click="reDesign">重新设计</el-button>
     <el-button @click="preview">预览效果</el-button>
+    <el-button @click="showJson">查看JSON</el-button>
+    <el-button @click="importJson">导入JSON</el-button>
   </div>
   <div style="display:flex;width:100%;padding:20px;">
     <div style="flex:1;margin-right:30px;">
@@ -83,6 +85,29 @@
       </div>
     </div>
   </div>
+  <!-- 显示JSON -->
+  <el-dialog
+  title="JSON数据"
+  :visible.sync="isShowJsonDialog"
+  width="70%">
+    <el-input type="textarea" v-model="JsonData"></el-input>
+    <!-- <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+    </span> -->
+    </el-dialog>
+  <!-- 导入JSON -->
+  <el-dialog
+  title="导入JSON数据"
+  :visible.sync="isImportJsonDialog"
+  width="70%">
+    <el-input type="textarea" v-model="importJsonData"></el-input>
+    <span slot="footer" class="dialog-footer">
+        <el-button @click="isImportJsonDialog = false">取 消</el-button>
+        <el-button type="primary" @click="importJsonSubmit">确 定</el-button>
+    </span>
+    </el-dialog>
+
 </div>
 </template>
 
@@ -91,6 +116,9 @@ export default {
     name: 'DesignPage',
    data() {
       return {
+        isShowJsonDialog: false, //控制显示JSON弹窗
+        isImportJsonDialog: false, //控制导入JSON弹窗
+        importJsonData: null, // 导入的JSON
         activeName: 'second', //默认显示表格配置栏
         // isConfig: false, //配置栏的显示控制
         currentTrIndex: 0, //点击当前的tr索引
@@ -98,7 +126,10 @@ export default {
         currentHoverTrIndex: 0, //hover当前的tr索引
         currentHoverTdIndex: 0, //hover当前的td索引
         bindData: {
-          trProp: '',
+          trLabel: '内容',
+          tdColor: '#666',  //td字体颜色
+          tdFont: '15',    //td字体大小
+          tdBgStyle: '#fff',  //td背景色
         },
         // 表格初始化，默认两行两列。
         bindTableData: {
@@ -413,7 +444,42 @@ export default {
            let routeData = this.$router.resolve({name: 'preview', query: {data:JSON.stringify(this.tableData.trArr)}});
             window.open(routeData.href, '_blank');
         // this.$router.push({path: '/preview',query:this.tableData.trArr})
-      }
+      },
+    //   显示JSON数据
+      showJson(){
+          this.isShowJsonDialog = true
+      },
+    //   导入JSON数据
+      importJson(){
+          this.isImportJsonDialog = true
+      },
+    //   导入JSON数据提交
+    importJsonSubmit(){
+        if(this.importJsonData){
+            console.log("eeee")
+            console.log(JSON.parse(this.importJsonData))
+            this.tableData = JSON.parse(this.importJsonData)
+        }
+        this.isImportJsonDialog = false
+        // 重置行显示
+        this.bindTableData.rows = this.tableData.trArr.length
+        // 重置列显示（显示最多的列）
+        let maxCol = 1
+        this.tableData.trArr.forEach(trItem => {
+            if(trItem.tdArr.length > maxCol){
+                maxCol = trItem.tdArr.length
+            } 
+        })
+        this.bindTableData.cols = maxCol
+
+    }
+
+
+    },
+    computed:{
+        JsonData(){
+            return JSON.stringify(this.tableData, null, 4)
+        }
     }
 
 }
@@ -445,6 +511,8 @@ table{
 }
 td,.center{
   text-align: center;
+  font-size: 15px;
+  color:#666;
 }
 .inputNum{
   width:40%;
@@ -453,13 +521,19 @@ td,.center{
 .inputNum input{
   width:50px;
 }
-.red{
-  background-color: red;
+.el-dialog{
+    width: 70% !important;
+    height: 70vh;
+
 }
-.yellow{
-  background-color: yellow;
+.el-dialog .el-dialog__body{
+    height:70%;
 }
-.pink{
-  background-color: pink;
+.el-dialog .el-dialog__body .el-textarea,
+.el-dialog .el-dialog__body .el-textarea .el-textarea__inner{
+    height:100%;
+    color:#409EFF;
+    font-weight: 500;
 }
+
 </style>
