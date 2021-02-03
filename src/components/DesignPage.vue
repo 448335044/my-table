@@ -1,6 +1,7 @@
 <template>
 <div>
   <div class="top">
+    <el-button @click="reDesign">重新设计</el-button>
     <el-button @click="preview">预览效果</el-button>
   </div>
   <div style="display:flex;width:100%;padding:20px;">
@@ -90,9 +91,12 @@ export default {
         bindData: {
           trProp: '',
         },
+        // 表格初始化，默认两行两列。
         bindTableData: {
-
+            rows: 2,
+            cols: 2
         },
+        copyTableData: null,
         tableData: {
           trArr: [
             {
@@ -146,7 +150,8 @@ export default {
       }
     },
     mounted() {
-      // 元数据
+      // 存储元数据
+        this.copyTableData = JSON.parse(JSON.stringify(this.tableData))
 
     },
     methods: {
@@ -249,7 +254,9 @@ export default {
                     console.log(1111111111)
                      // let aaa = this.tableData.trArr[indexTr].tdArr[tdi].rowspan
                     this.tableData.trArr[indexTr+itemTd.rowspan-1].tdArr.splice(tdi, 1)
-                  }else if(temp > 1) {
+                  }else if(temp > 1 && temp < 3) {
+                    //   for循环控制当前格包含的rowspan，跨几格，删几格
+                    //  不用for循环的话，当前格为一格向下合并没问题，当前格大于一格，删少了
                      for(let i=1; i<temp; i++) {
                       console.log("遍历删除")
                       console.log(indexTr)
@@ -257,6 +264,16 @@ export default {
                       this.tableData.trArr[indexTr+currentGeRowspan-1+i].tdArr.splice(tdi, 1)
                     }
                     console.log('>>>>>>>>>>>>>>>>1111111111')
+                    // this.tableData.trArr[indexTr+itemTd.rowspan-1].tdArr.splice(tdi, 1)
+                  }else if(temp > 2) {
+                    //  for(let i=1; i<temp; i++) {
+                    //   console.log("遍历删除")
+                    //   console.log(indexTr)
+                    //   console.log(i)
+                    //   this.tableData.trArr[indexTr+i-1].tdArr.splice(tdi, 1)
+                    // }
+                    this.tableData.trArr[indexTr+currentGeRowspan].tdArr.splice(tdi, 1)
+                    console.log('>>>>>>>>>>>>>>>>222222222222222')
                     // this.tableData.trArr[indexTr+itemTd.rowspan-1].tdArr.splice(tdi, 1)
                   }
                  
@@ -370,6 +387,15 @@ export default {
           }
         })
       },
+    //   重新设计
+      reDesign() {
+            //  恢复元数据
+          this.tableData = this.copyTableData
+            //  恢复行，列
+          this.bindTableData.rows = this.bindTableData.cols = 2
+
+      },
+    //   效果预览
       preview(){
         //    let routeData = this.$router.resolve({ path: '/preview',query:this.tableData.trArr });
            let routeData = this.$router.resolve({name: 'preview', query: {data:JSON.stringify(this.tableData.trArr)}});
