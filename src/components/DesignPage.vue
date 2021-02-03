@@ -13,7 +13,7 @@
             v-for="(td, tdIndex) in tr.tdArr"
             :key="td.id"
             :class="td.class"
-            :style="'width:'+td.rowWidth+'px;position:relative;padding:16px 30px;'"
+            :style="'backgroundColor:'+td.tdBgStyle+';width:'+td.rowWidth+'px;position:relative;padding:16px 30px;'"
             :colspan="td.colspan"
             :rowspan="td.rowspan"
             @click="handleTd(trIndex,tdIndex)"
@@ -24,7 +24,7 @@
               <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:30px;bottom:0" class="el-icon-circle-plus-outline" @click="addBottom(trIndex,tdIndex)" title="插入行"></span>
               <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:15px;bottom:0" class="el-icon-remove-outline" @click="del(trIndex,tdIndex)" title="删除当前"></span>
               <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:0;bottom:0" class="el-icon-caret-bottom" @click="mergeBottom(trIndex,tdIndex)" title="向下合并"></span>
-              {{td.value}}
+              <span :style="'fontSize:'+td.tdFont+'px;color:'+td.tdColor+';'">{{td.value}}</span>
             </td>
           </tr>
         </tbody>
@@ -48,7 +48,16 @@
               <!-- <el-form-item label="行高">
                 <el-input type="text" v-model="bindData.rowHeight"></el-input>
               </el-form-item> -->
-              <el-form-item label="绑定样式">
+              <el-form-item label="选择字体颜色">
+                  <el-color-picker v-model="bindData.tdColor"></el-color-picker>
+              </el-form-item>
+              <el-form-item label="选择字体大小">
+                  <el-input type="text" v-model="bindData.tdFont"></el-input>
+              </el-form-item>
+              <el-form-item label="选择背景色">
+                  <el-color-picker v-model="bindData.tdBgStyle"></el-color-picker>
+              </el-form-item>
+              <el-form-item label="绑定class">
                 <el-input type="text" v-model="bindData.trClass"></el-input>
               </el-form-item>
               <el-form-item>
@@ -381,6 +390,9 @@ export default {
                 itemTd.value = this.bindData.trLabel
                 itemTd.rowWidth = this.bindData.rowWidth
                 itemTd.class = this.bindData.trClass
+                itemTd.tdBgStyle = this.bindData.tdBgStyle
+                itemTd.tdColor = this.bindData.tdColor
+                itemTd.tdFont = this.bindData.tdFont
 
               }
             })
