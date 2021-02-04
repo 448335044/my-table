@@ -21,7 +21,7 @@
             @click="handleTd(trIndex,tdIndex)"
             @mouseenter="handleHover(trIndex,tdIndex)">
               <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:30px;bottom:20px" class="el-icon-circle-plus-outline" @click="add(trIndex,tdIndex)" title="向前插入"></span>
-              <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:15px;bottom:20px" class="el-icon-caret-right" @click="merge(trIndex,tdIndex)" title="向后合并"></span>
+              <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:15px;bottom:20px" class="el-icon-caret-right" @click="mergeRight(trIndex,tdIndex)" title="向后合并"></span>
               <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:0px;bottom:20px" class="el-icon-circle-plus-outline" @click="add(trIndex,tdIndex+1)" title="向后插入"></span>
               <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:30px;bottom:0" class="el-icon-circle-plus-outline" @click="addBottom(trIndex,tdIndex)" title="插入行"></span>
               <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:15px;bottom:0" class="el-icon-remove-outline" @click="del(trIndex,tdIndex)" title="删除当前"></span>
@@ -241,22 +241,39 @@ export default {
         this.currentHoverTdIndex = tdi
       },
       // 向后合并
-      merge(tri, tdi) {
-        this.tableData.trArr.forEach((itemTr, indexTr) => {
-          if (indexTr === tri) {
-            // itemTr.tdArr.splice(tdi+1, 1)
-           itemTr.tdArr.forEach((itemTd, indexTd) => {
-              if (indexTd === tdi) {
-                itemTd.colspan = itemTd.colspan+itemTr.tdArr[indexTd+1].colspan
-              }
-            })
-            itemTr.tdArr.splice(tdi+1, 1)
-          }
-        })
+      mergeRight(tri, tdi) {
+        // 1.先判断后面一格的rowspan是否等于当前格的rowspan（相等才允许合并----前提是有右一格）
+        let currentGeRowspan =  this.tableData.trArr[tri].tdArr[tdi].rowspan
+        // let rightGeRowspan = this.tableData.trArr[tri].tdArr[tdi+1].rowspan
+        // 解决右一格没有的情况
+        let rightGeRowspan = 0
+        if(this.tableData.trArr[tri].tdArr[tdi+1]){
+          rightGeRowspan = this.tableData.trArr[tri].tdArr[tdi+1].rowspan
+        }
+
+        if(currentGeRowspan === rightGeRowspan && rightGeRowspan){
+          this.tableData.trArr.forEach((itemTr, indexTr) => {
+            // 定位到当前行
+            if (indexTr === tri) {
+              // itemTr.tdArr.splice(tdi+1, 1)
+            itemTr.tdArr.forEach((itemTd, indexTd) => {
+                // 定位到当前格
+                if (indexTd === tdi) {
+                  // 2.向后合并后---当前格的rowspan = 当前格的rowspan + 右一格的rowspan
+                  itemTd.colspan = itemTd.colspan+itemTr.tdArr[indexTd+1].colspan
+                }
+              })
+              // 3.合并之后删除后一个
+              itemTr.tdArr.splice(tdi+1, 1)
+            }
+          })
+        }else{
+          this.$message.error('前后高度不一致，当前不允许向后合并！');
+        }
       },
       // 向下合并
       mergeBottom(tri, tdi) {
-        let temp = 1  //定义下一行的当前格的rowspan值，默认为1
+        let nextRowCurrentGeRowspan = 1  //定义下一行的当前格的rowspan值，默认为1
         // let currentTr = 1
         this.tableData.trArr.forEach((itemTr, indexTr) => {
 
@@ -275,29 +292,29 @@ export default {
                 console.log("向下合并")
                 console.log(itemTd.rowspan)
                 console.log("向下合并")
-                // temp = itemTr.tdArr[indexTd+1].rowspan
+                // nextRowCurrentGeRowspan = itemTr.tdArr[indexTd+1].rowspan
 
                 // 当前格的rowspan加上下一行当前格的rowspan
                   // 获取下一行的当前格(下一行不一定是index+1，因该是index+当前格的rowspan)
                   let currentGeRowspan = itemTd.rowspan
-                // temp = this.tableData.trArr[indexTr+1].tdArr[indexTd].rowspan
-                temp = this.tableData.trArr[indexTr+currentGeRowspan].tdArr[indexTd].rowspan
-                console.log(temp)
-                // itemTd.rowspan = itemTd.rowspan+temp
-                itemTd.rowspan = itemTd.rowspan+temp
+                // nextRowCurrentGeRowspan = this.tableData.trArr[indexTr+1].tdArr[indexTd].rowspan
+                nextRowCurrentGeRowspan = this.tableData.trArr[indexTr+currentGeRowspan].tdArr[indexTd].rowspan
+                console.log(nextRowCurrentGeRowspan)
+                // itemTd.rowspan = itemTd.rowspan+nextRowCurrentGeRowspan
+                itemTd.rowspan = itemTd.rowspan+nextRowCurrentGeRowspan
                 // 如果处于第一行
-                if(indexTr===0 && temp===1){
+                if(indexTr===0 && nextRowCurrentGeRowspan===1){
                   this.tableData.trArr[itemTd.rowspan-1].tdArr.splice(tdi, 1)
                 } else{
                   // 如果下一行的rowspan为1
-                  if(temp===1){
+                  if(nextRowCurrentGeRowspan===1){
                     console.log(1111111111)
                      // let aaa = this.tableData.trArr[indexTr].tdArr[tdi].rowspan
                     this.tableData.trArr[indexTr+itemTd.rowspan-1].tdArr.splice(tdi, 1)
-                  }else if(temp > 1 && temp < 3) {
+                  }else if(nextRowCurrentGeRowspan > 1 && nextRowCurrentGeRowspan < 3) {
                     //   for循环控制当前格包含的rowspan，跨几格，删几格
                     //  不用for循环的话，当前格为一格向下合并没问题，当前格大于一格，删少了
-                     for(let i=1; i<temp; i++) {
+                     for(let i=1; i<nextRowCurrentGeRowspan; i++) {
                       console.log("遍历删除")
                       console.log(indexTr)
                       console.log(i)
@@ -305,8 +322,8 @@ export default {
                     }
                     console.log('>>>>>>>>>>>>>>>>1111111111')
                     // this.tableData.trArr[indexTr+itemTd.rowspan-1].tdArr.splice(tdi, 1)
-                  }else if(temp > 2) {
-                    //  for(let i=1; i<temp; i++) {
+                  }else if(nextRowCurrentGeRowspan > 2) {
+                    //  for(let i=1; i<nextRowCurrentGeRowspan; i++) {
                     //   console.log("遍历删除")
                     //   console.log(indexTr)
                     //   console.log(i)
@@ -319,7 +336,7 @@ export default {
                  
 
 
-                    // for(let i=temp; i>0; i--) {
+                    // for(let i=nextRowCurrentGeRowspan; i>0; i--) {
                     //   console.log("遍历删除")
                     //   console.log(indexTr)
                     //   console.log(i)
@@ -332,7 +349,7 @@ export default {
             })
             console.log("eeeeeee")
             console.log(itemTr.tdArr)
-            // for(let i=temp; i>0; i--) {
+            // for(let i=nextRowCurrentGeRowspan; i>0; i--) {
             //   console.log("遍历删除")
             //   console.log(indexTr)
             //   console.log(i)
@@ -348,6 +365,7 @@ export default {
           console.log(this.tableData.trArr)
         })
       },
+  
       // 配置表格行
       changeRows(e) {
         console.log(111)
