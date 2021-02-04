@@ -26,6 +26,7 @@
               <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:30px;bottom:0" class="el-icon-circle-plus-outline" @click="addBottom(trIndex,tdIndex)" title="插入行"></span>
               <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:15px;bottom:0" class="el-icon-remove-outline" @click="del(trIndex,tdIndex)" title="删除当前"></span>
               <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:0;bottom:0" class="el-icon-caret-bottom" @click="mergeBottom(trIndex,tdIndex)" title="向下合并"></span>
+              <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:0;top:0" class="el-icon-caret-bottom" @click="mergeBottomtest(trIndex,tdIndex)" title="向下合并"></span>
               <span :style="'fontSize:'+td.tdFont+'px;color:'+td.tdColor+';'">{{td.value}}</span>
             </td>
           </tr>
@@ -259,7 +260,7 @@ export default {
             itemTr.tdArr.forEach((itemTd, indexTd) => {
                 // 定位到当前格
                 if (indexTd === tdi) {
-                  // 2.向后合并后---当前格的rowspan = 当前格的rowspan + 右一格的rowspan
+                  // 2.向后合并后---当前格的colspan = 当前格的colspan + 右一格的colspan
                   itemTd.colspan = itemTd.colspan+itemTr.tdArr[indexTd+1].colspan
                 }
               })
@@ -365,7 +366,76 @@ export default {
           console.log(this.tableData.trArr)
         })
       },
-  
+      // 测试向下合并
+      mergeBottomtest(tri, tdi) {
+       console.log(tri, tdi)
+       this.tableData.trArr.forEach((itemTr, indexTr) => {
+        // 定位到当前行
+        if (indexTr === tri) {
+        itemTr.tdArr.forEach((itemTd, indexTd) => {
+            // 定位到当前格
+            if (indexTd === tdi) {
+              //1.先删除下一行当前格(注意先保留删除的这一格的rowspan)
+                //(算法:特别注意,下一行的当前格不一定等于正对着下一格,有可能前面被向下合并过,那就删的是下一行当前格后面的td)
+              // let WillDeleteGe =  this.tableData.trArr[tri+itemTd.rowspan].tdArr[tdi]  //将要删除的一格(前面被向下合并过使用tdi就有bug)
+              // 前面被向下合并过: 使用tdi不能定位到当前行正对着的下一格,需判断当前格之前是否有发生过合并.
+              // 如何判断当前格和将要删除的格处于正对着的状态??????
+                  // 1.1
+                  // 判断当前行td的个数和将要删除的格所在行td的个数.(个数相等说明没有合并过)
+                  // if(itemTr.tdArr.length === this.tableData.trArr[tri+itemTd.rowspan].tdArr.length){
+                  //   console.log("没有合并过")
+                  // }else{
+                  //   console.log("合并过")
+                  // }
+                  // 刚写完注释发现这种方式不可靠. 举个栗子:
+                  // 当前格前面合并过,下一行的当前格后面合并过.
+                  let WillDeleteGe =  this.tableData.trArr[tri+itemTd.rowspan].tdArr[tdi] //将要删除的一格
+                  // 1.1
+                  //  遍历当前格所在行前面的所有td,找出有向下合并过的td,且合并过的td延申到了下一行当前格前面的td中去了.
+                  let rowspanAllHeight = itemTd.rowspan + WillDeleteGe.rowspan
+                  console.log("总高度", rowspanAllHeight)
+                  let currentRowAllTd = JSON.parse(JSON.stringify(this.tableData.trArr[tri].tdArr))  //拷贝当前行的所有td
+                  let beforeTdArr = currentRowAllTd.splice(0,indexTd)    //当前格所在行的所有td
+                  console.log("当前格所在行之前的所有td", beforeTdArr)
+                  let ismerge = beforeTdArr.filter(item => {
+                    console.log('每一项的',item.rowspan)
+                    return rowspanAllHeight <= item.rowspan
+                  })
+
+             
+              let storgeDeleteGeRowspan = WillDeleteGe.rowspan
+              console.log("删除的这一格处于行的索引", tri+itemTd.rowspan)
+              console.log('删除的这一格的rowspan',storgeDeleteGeRowspan)
+              let WillDeleteGeIndex = this.tableData.trArr[tri+itemTd.rowspan].tdArr.indexOf(WillDeleteGe)
+              console.log('当前格的td索引',indexTd)
+              console.log('删除的这一格的td索引',WillDeleteGeIndex)
+                //需判断当前格之前是否有发生过合并 (当前格处于td索引是否等于合并这格的td索引)
+                // if(indexTd !== WillDeleteGeIndex) {
+                if(ismerge.length) {
+                  // 合并过执行
+                  console.log("前面有合并过")
+                  let storgeDeleteTd =  this.tableData.trArr[tri+itemTd.rowspan].tdArr[tdi-ismerge.length] //缓存将要删除的一格
+                  this.tableData.trArr[tri+itemTd.rowspan].tdArr.splice(tdi-ismerge.length, 1)
+                  
+                  itemTd.rowspan = itemTd.rowspan + storgeDeleteTd.rowspan
+                } else{
+                  // 无合并执行
+                  console.log("前面没有合并过")
+                  this.tableData.trArr[tri+itemTd.rowspan].tdArr.splice(tdi, 1)
+                  // 2.向下合并后---当前格的rowspan = 当前格的rowspan + 下一行的当前格rowspan (当前存储的storgeDeleteGeRowspan)
+                  itemTd.rowspan = itemTd.rowspan + storgeDeleteGeRowspan
+                }
+              
+              
+              // 3.合并之后
+              // console.log("第几行", tri+itemTd.rowspan)
+              
+            }
+          })
+        }
+      })
+
+      },
       // 配置表格行
       changeRows(e) {
         console.log(111)
