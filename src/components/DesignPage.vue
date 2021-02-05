@@ -394,38 +394,114 @@ export default {
                   //  遍历当前格所在行前面的所有td,找出有向下合并过的td,且合并过的td延申到了下一行当前格前面的td中去了.
                   let rowspanAllHeight = itemTd.rowspan + WillDeleteGe.rowspan
                   console.log("总高度", rowspanAllHeight)
-                  let currentRowAllTd = JSON.parse(JSON.stringify(this.tableData.trArr[tri].tdArr))  //拷贝当前行的所有td
-                  let beforeTdArr = currentRowAllTd.splice(0,indexTd)    //当前格所在行的所有td
-                  console.log("当前格所在行之前的所有td", beforeTdArr)
-                  let ismerge = beforeTdArr.filter(item => {
-                    console.log('每一项的',item.rowspan)
-                    return rowspanAllHeight <= item.rowspan
+
+                  // 下面的行也应该遍历，要遍历到被合并的那一行
+                  //1.2遍历每一行前面的td（两层遍历） 
+                  // 先获取所有需要遍历的行(应该从行索引0开始，上面的也有可能合并过)
+                  // let currentRowAllTr = JSON.parse(JSON.stringify(this.tableData.trArr)).splice(indexTr,itemTd.rowspan+1)
+                  let currentRowAllTr = JSON.parse(JSON.stringify(this.tableData.trArr)).splice(0,itemTd.rowspan+1)
+                  console.log('当前需要遍历的行', currentRowAllTr)
+
+                  // ---------------------------------------------------------------
+                  let mergeAllArr = []
+                  // 遍历所有行
+                  currentRowAllTr.forEach(everyTr =>{
+                    
+                    // 1.3获取当前行所有需要遍历的td(当前格所在行前面的所有td)
+                      let beforeTdArr = everyTr.tdArr.splice(0,indexTd)
+                      // let currentRowAllTd = JSON.parse(JSON.stringify(this.tableData.trArr[tri].tdArr))  //拷贝当前行的所有td
+                      // let beforeTdArr = currentRowAllTd.splice(0,indexTd)    //当前格所在行的所有td
+
+                      console.log("当前格所在行之前的所有td", beforeTdArr)
+
+                      // 此处遍历的是当前行前面的所有td，
+                      // let ismerge = beforeTdArr.filter(item => {
+                      //   console.log('每一项的',item.rowspan)
+                      //   return rowspanAllHeight <= item.rowspan
+                      // })
+                      // 下面的行也应该遍历，要遍历到被合并的那一行
+                      //1.2遍历每一行前面的td（两层遍历）
+
+                      let ismerge = beforeTdArr.filter(item => {
+                        console.log('每一项的',item.rowspan)
+                        console.log(rowspanAllHeight,item.rowspan)
+
+                        return rowspanAllHeight <= item.rowspan
+                      })
+                      console.log('ismerge',ismerge)
+                      mergeAllArr = [...mergeAllArr,...ismerge]
                   })
 
-             
-              let storgeDeleteGeRowspan = WillDeleteGe.rowspan
-              console.log("删除的这一格处于行的索引", tri+itemTd.rowspan)
-              console.log('删除的这一格的rowspan',storgeDeleteGeRowspan)
-              let WillDeleteGeIndex = this.tableData.trArr[tri+itemTd.rowspan].tdArr.indexOf(WillDeleteGe)
-              console.log('当前格的td索引',indexTd)
-              console.log('删除的这一格的td索引',WillDeleteGeIndex)
-                //需判断当前格之前是否有发生过合并 (当前格处于td索引是否等于合并这格的td索引)
-                // if(indexTd !== WillDeleteGeIndex) {
-                if(ismerge.length) {
-                  // 合并过执行
-                  console.log("前面有合并过")
-                  let storgeDeleteTd =  this.tableData.trArr[tri+itemTd.rowspan].tdArr[tdi-ismerge.length] //缓存将要删除的一格
-                  this.tableData.trArr[tri+itemTd.rowspan].tdArr.splice(tdi-ismerge.length, 1)
+                  let storgeDeleteGeRowspan = WillDeleteGe.rowspan
+                  console.log("删除的这一格处于行的索引", tri+itemTd.rowspan)
+                  console.log('删除的这一格的rowspan',storgeDeleteGeRowspan)
+                  let WillDeleteGeIndex = this.tableData.trArr[tri+itemTd.rowspan].tdArr.indexOf(WillDeleteGe)
+                  console.log('当前格的td索引',indexTd)
+                  console.log('删除的这一格的td索引',WillDeleteGeIndex)
+                    //需判断当前格之前是否有发生过合并 (当前格处于td索引是否等于合并这格的td索引)
+                    // if(indexTd !== WillDeleteGeIndex) {
+                      console.log('前面合并过的个数', mergeAllArr)
+                    if(mergeAllArr.length) {
+                      // 合并过执行
+                      console.log("前面有合并过")
+                      let storgeDeleteTd =  this.tableData.trArr[tri+itemTd.rowspan].tdArr[tdi-mergeAllArr.length] //缓存将要删除的一格
+                      this.tableData.trArr[tri+itemTd.rowspan].tdArr.splice(tdi-mergeAllArr.length, 1)
+                      
+                      itemTd.rowspan = itemTd.rowspan + storgeDeleteTd.rowspan
+                    } else{
+                      // 无合并执行
+                      console.log("前面没有合并过")
+                      this.tableData.trArr[tri+itemTd.rowspan].tdArr.splice(tdi, 1)
+                      // 2.向下合并后---当前格的rowspan = 当前格的rowspan + 下一行的当前格rowspan (当前存储的storgeDeleteGeRowspan)
+                      itemTd.rowspan = itemTd.rowspan + storgeDeleteGeRowspan
+                    }
+
+
+                  // ---------------------------------------------------------------
+
+// 好的注释1
+                  // let currentRowAllTd = JSON.parse(JSON.stringify(this.tableData.trArr[tri].tdArr))  //拷贝当前行的所有td
+                  // let beforeTdArr = currentRowAllTd.splice(0,indexTd)    //当前格所在行的所有td
+                  // console.log("当前格所在行之前的所有td", beforeTdArr)
+
+                  // // 此处遍历的是当前行前面的所有td，
+                  // // let ismerge = beforeTdArr.filter(item => {
+                  // //   console.log('每一项的',item.rowspan)
+                  // //   return rowspanAllHeight <= item.rowspan
+                  // // })
+                  // // 下面的行也应该遍历，要遍历到被合并的那一行
+                  // //1.2遍历每一行前面的td（两层遍历）
+
+                  // let ismerge = beforeTdArr.filter(item => {
+                  //   console.log('每一项的',item.rowspan)
+                  //   return rowspanAllHeight <= item.rowspan
+                  // })
+// 好的注释1
+
+// 好的注释2
+              // let storgeDeleteGeRowspan = WillDeleteGe.rowspan
+              // console.log("删除的这一格处于行的索引", tri+itemTd.rowspan)
+              // console.log('删除的这一格的rowspan',storgeDeleteGeRowspan)
+              // let WillDeleteGeIndex = this.tableData.trArr[tri+itemTd.rowspan].tdArr.indexOf(WillDeleteGe)
+              // console.log('当前格的td索引',indexTd)
+              // console.log('删除的这一格的td索引',WillDeleteGeIndex)
+              //   //需判断当前格之前是否有发生过合并 (当前格处于td索引是否等于合并这格的td索引)
+              //   // if(indexTd !== WillDeleteGeIndex) {
+              //   if(ismerge.length) {
+              //     // 合并过执行
+              //     console.log("前面有合并过")
+              //     let storgeDeleteTd =  this.tableData.trArr[tri+itemTd.rowspan].tdArr[tdi-ismerge.length] //缓存将要删除的一格
+              //     this.tableData.trArr[tri+itemTd.rowspan].tdArr.splice(tdi-ismerge.length, 1)
                   
-                  itemTd.rowspan = itemTd.rowspan + storgeDeleteTd.rowspan
-                } else{
-                  // 无合并执行
-                  console.log("前面没有合并过")
-                  this.tableData.trArr[tri+itemTd.rowspan].tdArr.splice(tdi, 1)
-                  // 2.向下合并后---当前格的rowspan = 当前格的rowspan + 下一行的当前格rowspan (当前存储的storgeDeleteGeRowspan)
-                  itemTd.rowspan = itemTd.rowspan + storgeDeleteGeRowspan
-                }
-              
+              //     itemTd.rowspan = itemTd.rowspan + storgeDeleteTd.rowspan
+              //   } else{
+              //     // 无合并执行
+              //     console.log("前面没有合并过")
+              //     this.tableData.trArr[tri+itemTd.rowspan].tdArr.splice(tdi, 1)
+              //     // 2.向下合并后---当前格的rowspan = 当前格的rowspan + 下一行的当前格rowspan (当前存储的storgeDeleteGeRowspan)
+              //     itemTd.rowspan = itemTd.rowspan + storgeDeleteGeRowspan
+              //   }
+// 好的注释2              
               
               // 3.合并之后
               // console.log("第几行", tri+itemTd.rowspan)
@@ -528,9 +604,11 @@ export default {
       },
     //   效果预览
       preview(){
-        //    let routeData = this.$router.resolve({ path: '/preview',query:this.tableData.trArr });
-           let routeData = this.$router.resolve({name: 'preview', query: {data:JSON.stringify(this.tableData.trArr)}});
-            window.open(routeData.href, '_blank');
+        // query格式是url传参,长度受到限制.
+        // let routeData = this.$router.resolve({ path: '/preview',query:this.tableData.trArr });
+          localStorage.setItem('jsonData', JSON.stringify(this.tableData.trArr))
+          let routeData = this.$router.resolve({name: 'preview'});
+          window.open(routeData.href, '_blank');
         // this.$router.push({path: '/preview',query:this.tableData.trArr})
       },
     //   显示JSON数据
@@ -539,6 +617,7 @@ export default {
       },
     //   导入JSON数据
       importJson(){
+          this.importJsonData = ''
           this.isImportJsonDialog = true
       },
     //   导入JSON数据提交

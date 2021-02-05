@@ -155,8 +155,9 @@
                     "rowspan": 1,
                     "colspan": 5,
                     "tdBgStyle": "#fff",
-                    "tdColor": "#12A8E8",
-                    "tdFont": "15"
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15",
+                    "rowWidth": "100"
                 }
             ]
         },
@@ -175,13 +176,14 @@
                 },
                 {
                     "name": "bbb",
-                    "value": "建设周期",
+                    "value": "是",
                     "width": "100",
                     "rowspan": 1,
                     "colspan": 2,
                     "tdBgStyle": "#fff",
-                    "tdColor": "#3A9DEE",
-                    "tdFont": "15"
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15",
+                    "rowWidth": "100"
                 },
                 {
                     "name": "aaa",
@@ -195,13 +197,14 @@
                 },
                 {
                     "name": "aaa",
-                    "value": "建设周期",
+                    "value": "是",
                     "width": "100",
                     "rowspan": 1,
                     "colspan": 2,
                     "tdBgStyle": "#fff",
-                    "tdColor": "#3A9DEE",
-                    "tdFont": "15"
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15",
+                    "rowWidth": "100"
                 }
             ]
         },
@@ -225,8 +228,9 @@
                     "rowspan": 1,
                     "colspan": 5,
                     "tdBgStyle": "#fff",
-                    "tdColor": "#12A8E8",
-                    "tdFont": "15"
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15",
+                    "rowWidth": "100"
                 }
             ]
         },
@@ -245,13 +249,14 @@
                 },
                 {
                     "name": "bbb",
-                    "value": "张三",
+                    "value": "撒地方",
                     "width": "100",
                     "rowspan": 1,
                     "colspan": 2,
                     "tdBgStyle": "#fff",
-                    "tdColor": "#12A8E8",
-                    "tdFont": "15"
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15",
+                    "rowWidth": "100"
                 },
                 {
                     "name": "aaa",
@@ -265,13 +270,14 @@
                 },
                 {
                     "name": "aaa",
-                    "value": "张三",
+                    "value": "20",
                     "width": "100",
                     "rowspan": 1,
                     "colspan": 2,
                     "tdBgStyle": "#fff",
-                    "tdColor": "#12A8E8",
-                    "tdFont": "15"
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15",
+                    "rowWidth": "100"
                 }
             ]
         },
@@ -295,8 +301,9 @@
                     "rowspan": 1,
                     "colspan": 1,
                     "tdBgStyle": "#fff",
-                    "tdColor": "#12A8E8",
-                    "tdFont": "15"
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15",
+                    "rowWidth": "100"
                 },
                 {
                     "name": "aaa",
@@ -315,8 +322,9 @@
                     "rowspan": 1,
                     "colspan": 1,
                     "tdBgStyle": "#fff",
-                    "tdColor": "#12A8E8",
-                    "tdFont": "15"
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15",
+                    "rowWidth": "100"
                 },
                 {
                     "name": "aaa",
@@ -335,8 +343,9 @@
                     "rowspan": 1,
                     "colspan": 1,
                     "tdBgStyle": "#fff",
-                    "tdColor": "#12A8E8",
-                    "tdFont": "15"
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15",
+                    "rowWidth": "100"
                 }
             ]
         },
@@ -355,13 +364,14 @@
                 },
                 {
                     "name": "bbb",
-                    "value": "但法国当时法国大使馆发第三个的首付大概双方都是给",
+                    "value": "项目联系人",
                     "width": "100",
                     "rowspan": 1,
                     "colspan": 5,
                     "tdBgStyle": "#fff",
-                    "tdColor": "#12A8E8",
-                    "tdFont": "15"
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15",
+                    "rowWidth": "100"
                 }
             ]
         },
@@ -370,51 +380,25 @@
             "tdArr": [
                 {
                     "name": "aaa",
-                    "value": "姓名",
+                    "value": "年度重点节点推进计划",
                     "width": "100",
-                    "class": "#fff",
                     "rowspan": 1,
-                    "colspan": 1
+                    "colspan": 1,
+                    "rowWidth": "100",
+                    "tdBgStyle": "#fff",
+                    "tdColor": "#666",
+                    "tdFont": "15"
                 },
                 {
                     "name": "bbb",
-                    "value": "张三",
+                    "value": "项目联系人",
                     "width": "100",
-                    "class": "#fff",
                     "rowspan": 1,
-                    "colspan": 1
-                },
-                {
-                    "name": "aaa",
-                    "value": "姓名",
-                    "width": "100",
-                    "class": "#fff",
-                    "rowspan": 1,
-                    "colspan": 1
-                },
-                {
-                    "name": "aaa",
-                    "value": "姓名",
-                    "width": "100",
-                    "class": "#fff",
-                    "rowspan": 1,
-                    "colspan": 1
-                },
-                {
-                    "name": "aaa",
-                    "value": "姓名",
-                    "width": "100",
-                    "class": "#fff",
-                    "rowspan": 1,
-                    "colspan": 1
-                },
-                {
-                    "name": "aaa",
-                    "value": "姓名",
-                    "width": "100",
-                    "class": "#fff",
-                    "rowspan": 1,
-                    "colspan": 1
+                    "colspan": 5,
+                    "rowWidth": "100",
+                    "tdBgStyle": "#fff",
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15"
                 }
             ]
         },
@@ -423,51 +407,47 @@
             "tdArr": [
                 {
                     "name": "aaa",
-                    "value": "姓名",
+                    "value": "建设性质",
                     "width": "100",
-                    "class": "#fff",
                     "rowspan": 1,
-                    "colspan": 1
+                    "colspan": 1,
+                    "rowWidth": "100",
+                    "tdBgStyle": "#fff",
+                    "tdColor": "#666",
+                    "tdFont": "15"
                 },
                 {
                     "name": "bbb",
-                    "value": "张三",
+                    "value": "项目联系人",
                     "width": "100",
-                    "class": "#fff",
                     "rowspan": 1,
-                    "colspan": 1
+                    "colspan": 2,
+                    "rowWidth": "100",
+                    "tdBgStyle": "#fff",
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15"
                 },
                 {
                     "name": "aaa",
-                    "value": "姓名",
+                    "value": "项目所属地",
                     "width": "100",
-                    "class": "#fff",
                     "rowspan": 1,
-                    "colspan": 1
+                    "colspan": 1,
+                    "rowWidth": "100",
+                    "tdBgStyle": "#fff",
+                    "tdColor": "#666",
+                    "tdFont": "15"
                 },
                 {
                     "name": "aaa",
-                    "value": "姓名",
+                    "value": "项目联系人",
                     "width": "100",
-                    "class": "#fff",
                     "rowspan": 1,
-                    "colspan": 1
-                },
-                {
-                    "name": "aaa",
-                    "value": "姓名",
-                    "width": "100",
-                    "class": "#fff",
-                    "rowspan": 1,
-                    "colspan": 1
-                },
-                {
-                    "name": "aaa",
-                    "value": "姓名",
-                    "width": "100",
-                    "class": "#fff",
-                    "rowspan": 1,
-                    "colspan": 1
+                    "colspan": 2,
+                    "rowWidth": "100",
+                    "tdBgStyle": "#fff",
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15"
                 }
             ]
         },
@@ -476,51 +456,47 @@
             "tdArr": [
                 {
                     "name": "aaa",
-                    "value": "姓名",
+                    "value": "项目类别",
                     "width": "100",
-                    "class": "#fff",
                     "rowspan": 1,
-                    "colspan": 1
+                    "colspan": 1,
+                    "rowWidth": "100",
+                    "tdBgStyle": "#fff",
+                    "tdColor": "#666",
+                    "tdFont": "15"
                 },
                 {
                     "name": "bbb",
-                    "value": "张三",
+                    "value": "项目联系人",
                     "width": "100",
-                    "class": "#fff",
                     "rowspan": 1,
-                    "colspan": 1
+                    "colspan": 2,
+                    "rowWidth": "100",
+                    "tdBgStyle": "#fff",
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15"
                 },
                 {
                     "name": "aaa",
-                    "value": "姓名",
+                    "value": "项目管理层级",
                     "width": "100",
-                    "class": "#fff",
                     "rowspan": 1,
-                    "colspan": 1
+                    "colspan": 1,
+                    "rowWidth": "100",
+                    "tdBgStyle": "#fff",
+                    "tdColor": "#666",
+                    "tdFont": "15"
                 },
                 {
                     "name": "aaa",
-                    "value": "姓名",
+                    "value": "项目联系人",
                     "width": "100",
-                    "class": "#fff",
                     "rowspan": 1,
-                    "colspan": 1
-                },
-                {
-                    "name": "aaa",
-                    "value": "姓名",
-                    "width": "100",
-                    "class": "#fff",
-                    "rowspan": 1,
-                    "colspan": 1
-                },
-                {
-                    "name": "aaa",
-                    "value": "姓名",
-                    "width": "100",
-                    "class": "#fff",
-                    "rowspan": 1,
-                    "colspan": 1
+                    "colspan": 2,
+                    "rowWidth": "100",
+                    "tdBgStyle": "#fff",
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15"
                 }
             ]
         },
@@ -529,51 +505,25 @@
             "tdArr": [
                 {
                     "name": "aaa",
-                    "value": "姓名",
+                    "value": "项目入库代码",
                     "width": "100",
-                    "class": "#fff",
                     "rowspan": 1,
-                    "colspan": 1
+                    "colspan": 1,
+                    "rowWidth": "100",
+                    "tdBgStyle": "#fff",
+                    "tdColor": "#666",
+                    "tdFont": "15"
                 },
                 {
                     "name": "bbb",
-                    "value": "张三",
+                    "value": "项目联系人",
                     "width": "100",
-                    "class": "#fff",
                     "rowspan": 1,
-                    "colspan": 1
-                },
-                {
-                    "name": "aaa",
-                    "value": "姓名",
-                    "width": "100",
-                    "class": "#fff",
-                    "rowspan": 1,
-                    "colspan": 1
-                },
-                {
-                    "name": "aaa",
-                    "value": "姓名",
-                    "width": "100",
-                    "class": "#fff",
-                    "rowspan": 1,
-                    "colspan": 1
-                },
-                {
-                    "name": "aaa",
-                    "value": "姓名",
-                    "width": "100",
-                    "class": "#fff",
-                    "rowspan": 1,
-                    "colspan": 1
-                },
-                {
-                    "name": "aaa",
-                    "value": "姓名",
-                    "width": "100",
-                    "class": "#fff",
-                    "rowspan": 1,
-                    "colspan": 1
+                    "colspan": 5,
+                    "rowWidth": "100",
+                    "tdBgStyle": "#fff",
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15"
                 }
             ]
         },
@@ -582,51 +532,25 @@
             "tdArr": [
                 {
                     "name": "aaa",
-                    "value": "姓名",
+                    "value": "项目联系人",
                     "width": "100",
-                    "class": "#fff",
                     "rowspan": 1,
-                    "colspan": 1
+                    "colspan": 1,
+                    "rowWidth": "100",
+                    "tdBgStyle": "#fff",
+                    "tdColor": "#666",
+                    "tdFont": "15"
                 },
                 {
                     "name": "bbb",
-                    "value": "张三",
+                    "value": "项目联系人",
                     "width": "100",
-                    "class": "#fff",
                     "rowspan": 1,
-                    "colspan": 1
-                },
-                {
-                    "name": "aaa",
-                    "value": "姓名",
-                    "width": "100",
-                    "class": "#fff",
-                    "rowspan": 1,
-                    "colspan": 1
-                },
-                {
-                    "name": "aaa",
-                    "value": "姓名",
-                    "width": "100",
-                    "class": "#fff",
-                    "rowspan": 1,
-                    "colspan": 1
-                },
-                {
-                    "name": "aaa",
-                    "value": "姓名",
-                    "width": "100",
-                    "class": "#fff",
-                    "rowspan": 1,
-                    "colspan": 1
-                },
-                {
-                    "name": "aaa",
-                    "value": "姓名",
-                    "width": "100",
-                    "class": "#fff",
-                    "rowspan": 1,
-                    "colspan": 1
+                    "colspan": 5,
+                    "rowWidth": "100",
+                    "tdBgStyle": "#fff",
+                    "tdColor": "#3FA5EE",
+                    "tdFont": "15"
                 }
             ]
         }

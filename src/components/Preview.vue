@@ -31,9 +31,10 @@ export default {
     },
     created() {
         console.log('this.$route.params')
-        console.log(JSON.parse(this.$route.query.data))
-        // this.previewData = JSON.parse(this.$route.query)
-        this.previewData = JSON.parse(this.$route.query.data)
+
+        // this.previewData = this.$route.query
+        this.previewData = JSON.parse(localStorage.getItem('jsonData'))
+        // this.previewData = JSON.parse(this.$route.params.data)
     }
 }
 </script>
