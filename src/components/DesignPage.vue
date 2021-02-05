@@ -398,11 +398,17 @@ export default {
                   // 下面的行也应该遍历，要遍历到被合并的那一行
                   //1.2遍历每一行前面的td（两层遍历） 
                   // 先获取所有需要遍历的行(应该从行索引0开始，上面的也有可能合并过)
+
+                  // ------------------------------------版本1.1----------------------------------
                   // let currentRowAllTr = JSON.parse(JSON.stringify(this.tableData.trArr)).splice(indexTr,itemTd.rowspan+1)
+
+                  // 版本2.1.-----------------------------版本2.1----------------------------------
                   let currentRowAllTr = JSON.parse(JSON.stringify(this.tableData.trArr)).splice(0,itemTd.rowspan+1)
+                  // ---------------------------------------------------------------
+
                   console.log('当前需要遍历的行', currentRowAllTr)
 
-                  // ---------------------------------------------------------------
+                  // 版本2.2.-----------------------------版本2.2----------------------------------
                   let mergeAllArr = []
                   // 遍历所有行
                   currentRowAllTr.forEach(everyTr =>{
@@ -460,6 +466,7 @@ export default {
                   // ---------------------------------------------------------------
 
 // 好的注释1
+// ------------------------------------版本1.2----------------------------------
                   // let currentRowAllTd = JSON.parse(JSON.stringify(this.tableData.trArr[tri].tdArr))  //拷贝当前行的所有td
                   // let beforeTdArr = currentRowAllTd.splice(0,indexTd)    //当前格所在行的所有td
                   // console.log("当前格所在行之前的所有td", beforeTdArr)
@@ -501,6 +508,8 @@ export default {
               //     // 2.向下合并后---当前格的rowspan = 当前格的rowspan + 下一行的当前格rowspan (当前存储的storgeDeleteGeRowspan)
               //     itemTd.rowspan = itemTd.rowspan + storgeDeleteGeRowspan
               //   }
+
+// ------------------------------------版本1.2----------------------------------
 // 好的注释2              
               
               // 3.合并之后
