@@ -20,13 +20,20 @@
             :rowspan="td.rowspan"
             @click="handleTd(trIndex,tdIndex)"
             @mouseenter="handleHover(trIndex,tdIndex)">
-              <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:30px;bottom:20px" class="el-icon-circle-plus-outline" @click="add(trIndex,tdIndex)" title="向前插入"></span>
-              <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:15px;bottom:20px" class="el-icon-caret-right" @click="mergeRight(trIndex,tdIndex)" title="向后合并"></span>
-              <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:0px;bottom:20px" class="el-icon-circle-plus-outline" @click="add(trIndex,tdIndex+1)" title="向后插入"></span>
-              <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:30px;bottom:0" class="el-icon-circle-plus-outline" @click="addBottom(trIndex,tdIndex)" title="插入行"></span>
-              <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:15px;bottom:0" class="el-icon-remove-outline" @click="del(trIndex,tdIndex)" title="删除当前"></span>
-              <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:0;bottom:0" class="el-icon-caret-bottom" @click="mergeBottom(trIndex,tdIndex)" title="向下合并"></span>
-              <span v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:0;top:0" class="el-icon-caret-bottom" @click="mergeBottomtest(trIndex,tdIndex)" title="向下合并"></span>
+              <el-dropdown v-show="currentHoverTrIndex===trIndex && currentHoverTdIndex===tdIndex" style="position:absolute;right:10px;bottom:10px;">
+                <el-button style="position:absolute;right:0;bottom:0;padding:6px">
+                  <i class="el-icon-menu"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item><span @click="add(trIndex,tdIndex)">向前插入</span></el-dropdown-item>
+                  <el-dropdown-item><span @click="mergeRight(trIndex,tdIndex)">向后合并</span></el-dropdown-item>
+                  <el-dropdown-item><span @click="add(trIndex,tdIndex+1)">向后插入</span></el-dropdown-item>
+                  <el-dropdown-item><span @click="addBottom(trIndex,tdIndex)">插入行</span></el-dropdown-item>
+                  <el-dropdown-item><span @click="del(trIndex,tdIndex)">删除当前</span></el-dropdown-item>
+                  <el-dropdown-item><span @click="mergeBottomtest(trIndex,tdIndex)">向下合并</span></el-dropdown-item>
+
+                </el-dropdown-menu>
+              </el-dropdown>
               <span :style="'fontSize:'+td.tdFont+'px;color:'+td.tdColor+';'">{{td.value}}</span>
             </td>
           </tr>
