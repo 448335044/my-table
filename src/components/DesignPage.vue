@@ -277,6 +277,75 @@ export default {
             ],
           },
           {
+            id: 10000,
+            tdArr: [
+              {
+                id: 2000,
+                name: "aaa",
+                value: "姓名",
+                width: "100",
+                class: "#fff",
+                rowspan: 1,
+                colspan: 1,
+              },
+              {
+                id: 2001,
+                name: "bbb",
+                value: "张三",
+                width: "100",
+                class: "#fff",
+                rowspan: 1,
+                colspan: 1,
+              },
+            ],
+          },
+          {
+            id: 10010,
+            tdArr: [
+              {
+                id: 2000,
+                name: "aaa",
+                value: "姓名",
+                width: "100",
+                class: "#fff",
+                rowspan: 1,
+                colspan: 1,
+              },
+              {
+                id: 2001,
+                name: "bbb",
+                value: "张三",
+                width: "100",
+                class: "#fff",
+                rowspan: 1,
+                colspan: 1,
+              },
+            ],
+          },
+          {
+            id: 100011,
+            tdArr: [
+              {
+                id: 2000,
+                name: "aaa",
+                value: "姓名",
+                width: "100",
+                class: "#fff",
+                rowspan: 1,
+                colspan: 1,
+              },
+              {
+                id: 2001,
+                name: "bbb",
+                value: "张三",
+                width: "100",
+                class: "#fff",
+                rowspan: 1,
+                colspan: 1,
+              },
+            ],
+          },
+          {
             id: 1001,
             tdArr: [
               {
@@ -304,12 +373,28 @@ export default {
     };
   },
   mounted() {
+    this.resourceDataChange(this.tableData)
     // 存储元数据
     this.copyTableData = JSON.parse(JSON.stringify(this.tableData));
   },
   methods: {
+    //   元数据变化坐标属性也跟着变化
+    resourceDataChange(data){
+            //   对元数据每个td对象增加坐标属性
+            let allTrArrNode = this.$refs.visual_table.childNodes[0].childNodes
+            data.trArr.forEach((tr, indexTr) => {
+                tr.tdArr.forEach((td, indexTd) => {
+                    let currentTdNode = allTrArrNode[indexTr].childNodes[indexTd]
+                    td.currentPosX = this.findPosX(currentTdNode)
+                    td.currentPosY = this.findPosY(currentTdNode)
+                })
+            })
+            console.log(this.tableData.trArr)
+    },
     // 点击当前格
     handleTd(e, tri, tdi) {
+      this.currentHoverTrIndex = tri;
+      this.currentHoverTdIndex = tdi;
 
 
       console.log("e", e.currentTarget.parentElement);
@@ -373,20 +458,45 @@ export default {
       console.log("下一格td的currentTdY",bottomTdY)
       let bottomTdX = this.currentTdX
       console.log("下一格td的currentTdX",bottomTdX)
-    //   遍历所有td节点（更准确)
-    console.log(this.$refs.visual_table.childNodes[0].childNodes)
-    // 获取所有tr
-    let allTrArr = this.$refs.visual_table.childNodes[0].childNodes
-    allTrArr.forEach(tr => {
-        console.log("tr的子元素",tr.childNodes)
-        tr.childNodes.forEach(td => {
-            console.log("td元素",td.offsetHeight)
-            console.log("td元素坐标", this.findPosX(td), this.findPosY(td))
-            if((bottomTdX === this.findPosX(td)) && bottomTdY === this.findPosY(td)) {
-                console.log("这就是正对着的下一格",this.findPosX(td), this.findPosY(td))
-            }
+      let deleteTdIndex = 0
+      let deleteTrIndex = 0
+      let deleteTdRowspan = 1
+
+      this.tableData.trArr.forEach((tr, indexTr) => {
+            tr.tdArr.forEach((td, indexTd) => {
+                if((td.currentPosX===bottomTdX) && (td.currentPosY===bottomTdY)){
+                    console.log("下一格的索引（删除的td）", indexTr, indexTd)
+                    deleteTdIndex = indexTd
+                    deleteTrIndex = indexTr
+                    deleteTdRowspan = td.rowspan
+
+                }
+            })
         })
-    })
+
+         this.tableData.trArr[deleteTrIndex].tdArr.splice(deleteTdIndex,1)
+         this.tableData.trArr[deleteTrIndex-1].tdArr[deleteTdIndex].rowspan = this.tableData.trArr[deleteTrIndex-1].tdArr[deleteTdIndex].rowspan + deleteTdRowspan
+    // 合并之后坐标发生变化，重新绑定坐标属性
+    this.resourceDataChange(this.tableData)
+
+
+    //   遍历所有td节点（更准确)
+    // console.log(this.$refs.visual_table.childNodes[0].childNodes)
+    // // 获取所有tr节点
+    // let allTrArr = this.$refs.visual_table.childNodes[0].childNodes
+    // allTrArr.forEach((tr, trIndex) => {
+    //     console.log("tr的子元素",tr.childNodes)
+    //     tr.childNodes.forEach((td, tdIndex) => {
+    //         console.log("td元素",td.offsetHeight)
+    //         console.log("td元素坐标", this.findPosX(td), this.findPosY(td))
+    //         console.log("td元素正对着的下一格坐标", bottomTdX, bottomTdY)
+
+    //         if((bottomTdX === this.findPosX(td)) && bottomTdY === this.findPosY(td)) {
+    //             console.log("这就是正对着的下一格",this.findPosX(td), this.findPosY(td))
+    //             this.tableData.trArr[trIndex].tdArr[tdIndex]
+    //         }
+    //     })
+    // })
 
 
 
@@ -417,9 +527,9 @@ export default {
       });
     },
     handleHover(tri, tdi) {
-      console.log("1");
-      this.currentHoverTrIndex = tri;
-      this.currentHoverTdIndex = tdi;
+      console.log(tri,tdi);
+    //   this.currentHoverTrIndex = tri;
+    //   this.currentHoverTdIndex = tdi;
     },
     // 向后合并
     mergeRight(tri, tdi) {
@@ -743,6 +853,8 @@ export default {
             ],
           });
         }
+        //   对新数据增加坐标属性
+    // this.resourceDataChange(this.tableData)
       } else if (e < this.tableData.trArr.length) {
         this.tableData.trArr.length = e;
       }
@@ -767,6 +879,8 @@ export default {
           itemTr.tdArr.length = e;
         }
       });
+      //   对新数据增加坐标属性
+    // this.resourceDataChange(this.tableData)
     },
     save() {
       // 遍历所有的tr
@@ -835,6 +949,27 @@ export default {
       return JSON.stringify(this.tableData, null, 4);
     },
   },
+  watch:{
+    'bindTableData.rows': {
+        handler(newName, oldName) {
+            console.log("变化了", newName, oldName)
+            console.log(this.bindTableData.rows)
+            // this.resourceDataChange(this.tableData)
+
+        },
+        deep: true,
+        immediate: true
+    },
+    // 'bindTableData.cols': {
+    //     handler(newName, oldName) {
+    //         console.log("变化了", newName, oldName)
+    //         this.resourceDataChange(this.tableData)
+
+    //     },
+    //     deep: true,
+    //     immediate: true
+    // }
+}
 };
 </script>
 
