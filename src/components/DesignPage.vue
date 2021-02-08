@@ -229,6 +229,7 @@ export default {
     currentTdY:0,
     currentTdW:0,
     currentTdH:0,
+    deleteTdTopRowspan: 1,  //当前格的rowspan
 
       isShowJsonDialog: false, //控制显示JSON弹窗
       isImportJsonDialog: false, //控制导入JSON弹窗
@@ -237,8 +238,8 @@ export default {
       // isConfig: false, //配置栏的显示控制
       currentTrIndex: 0, //点击当前的tr索引
       currentTdIndex: 0, //点击当前的td索引
-      currentHoverTrIndex: 0, //hover当前的tr索引
-      currentHoverTdIndex: 0, //hover当前的td索引
+      currentHoverTrIndex: undefined, //hover当前的tr索引
+      currentHoverTdIndex: undefined, //hover当前的td索引
       bindData: {
         trLabel: "内容",
         tdColor: "#666", //td字体颜色
@@ -422,6 +423,9 @@ export default {
       this.activeName = "first";
       this.currentTrIndex = tri;
       this.currentTdIndex = tdi;
+
+    //   点击当前格获取当前格的rowspan
+        this.deleteTdTopRowspan = this.tableData.trArr[tri].tdArr[tdi].rowspan
     },
     //   获取X坐标
     findPosX(obj) {
@@ -460,24 +464,37 @@ export default {
       console.log("下一格td的currentTdX",bottomTdX)
       let deleteTdIndex = 0
       let deleteTrIndex = 0
-      let deleteTdRowspan = 1
-
+      let deleteTdRowspan = 1  //缓存删除格的rowspan
+    //   let deleteTdTopRowspan = 1
+      let currentGe = undefined    //定义当前格
       this.tableData.trArr.forEach((tr, indexTr) => {
             tr.tdArr.forEach((td, indexTd) => {
                 if((td.currentPosX===bottomTdX) && (td.currentPosY===bottomTdY)){
-                    console.log("下一格的索引（删除的td）", indexTr, indexTd)
+                    // 找到当前格
+                    currentGe = this.tableData.trArr[indexTr-this.deleteTdTopRowspan].tdArr[deleteTdIndex] //当前格
+                    // 通过坐标和当前格所占的高度找到要删除的那一格,缓存索引和该格的rowspan
+                    console.log("下一格的索引（删除的td）", indexTr+currentGe.rowspan-1, indexTd)
                     deleteTdIndex = indexTd
                     deleteTrIndex = indexTr
                     deleteTdRowspan = td.rowspan
-
+                    console.log("当前格", currentGe)
+                    console.log("当前格SPAN", currentGe.rowspan)
                 }
             })
         })
 
-         this.tableData.trArr[deleteTrIndex].tdArr.splice(deleteTdIndex,1)
-         this.tableData.trArr[deleteTrIndex-1].tdArr[deleteTdIndex].rowspan = this.tableData.trArr[deleteTrIndex-1].tdArr[deleteTdIndex].rowspan + deleteTdRowspan
-    // 合并之后坐标发生变化，重新绑定坐标属性
-    this.resourceDataChange(this.tableData)
+        console.log("当前格的高度", this.currentTdH)
+        console.log("被合并的那格rowspan", deleteTdRowspan)
+        console.log("删除格的坐标索引", deleteTrIndex, deleteTdIndex)
+        console.log("被合并td的上一格", currentGe)
+        console.log("最终rowspan", currentGe.rowspan+1)
+        // 删除目标格
+        this.tableData.trArr[deleteTrIndex].tdArr.splice(deleteTdIndex,1)
+        // 合并后改变当前格的rowspan
+        currentGe.rowspan = currentGe.rowspan+deleteTdRowspan
+
+        // 合并之后坐标发生变化，重新绑定坐标属性
+        this.resourceDataChange(this.tableData)
 
 
     //   遍历所有td节点（更准确)
