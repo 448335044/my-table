@@ -229,6 +229,7 @@ export default {
     currentTdY:0,
     currentTdW:0,
     currentTdH:0,
+    currentGe: undefined,    //定义当前格
     deleteTdTopRowspan: 1,  //当前格的rowspan
 
       isShowJsonDialog: false, //控制显示JSON弹窗
@@ -424,6 +425,9 @@ export default {
       this.currentTrIndex = tri;
       this.currentTdIndex = tdi;
 
+
+    //   存储当前格
+        this.currentGe = this.tableData.trArr[tri].tdArr[tdi]
     //   点击当前格获取当前格的rowspan
         this.deleteTdTopRowspan = this.tableData.trArr[tri].tdArr[tdi].rowspan
     },
@@ -466,19 +470,19 @@ export default {
       let deleteTrIndex = 0
       let deleteTdRowspan = 1  //缓存删除格的rowspan
     //   let deleteTdTopRowspan = 1
-      let currentGe = undefined    //定义当前格
+    //   let currentGe = undefined    //定义当前格
       this.tableData.trArr.forEach((tr, indexTr) => {
             tr.tdArr.forEach((td, indexTd) => {
                 if((td.currentPosX===bottomTdX) && (td.currentPosY===bottomTdY)){
                     // 找到当前格
-                    currentGe = this.tableData.trArr[indexTr-this.deleteTdTopRowspan].tdArr[deleteTdIndex] //当前格
+                    // this.currentGe = this.tableData.trArr[indexTr-this.deleteTdTopRowspan].tdArr[deleteTdIndex] //当前格
                     // 通过坐标和当前格所占的高度找到要删除的那一格,缓存索引和该格的rowspan
-                    console.log("下一格的索引（删除的td）", indexTr+currentGe.rowspan-1, indexTd)
+                    console.log("下一格的索引（删除的td）", indexTr+this.currentGe.rowspan-1, indexTd)
                     deleteTdIndex = indexTd
                     deleteTrIndex = indexTr
                     deleteTdRowspan = td.rowspan
-                    console.log("当前格", currentGe)
-                    console.log("当前格SPAN", currentGe.rowspan)
+                    console.log("当前格", this.currentGe)
+                    console.log("当前格SPAN", this.currentGe.rowspan)
                 }
             })
         })
@@ -486,12 +490,14 @@ export default {
         console.log("当前格的高度", this.currentTdH)
         console.log("被合并的那格rowspan", deleteTdRowspan)
         console.log("删除格的坐标索引", deleteTrIndex, deleteTdIndex)
-        console.log("被合并td的上一格", currentGe)
-        console.log("最终rowspan", currentGe.rowspan+1)
+        console.log("被合并td的上一格", this.currentGe)
+        console.log("最终rowspan", this.currentGe.rowspan+1)
         // 删除目标格
         this.tableData.trArr[deleteTrIndex].tdArr.splice(deleteTdIndex,1)
         // 合并后改变当前格的rowspan
-        currentGe.rowspan = currentGe.rowspan+deleteTdRowspan
+
+console.log("当前格格", this.currentGe)
+        this.currentGe.rowspan = this.currentGe.rowspan + deleteTdRowspan
 
         // 合并之后坐标发生变化，重新绑定坐标属性
         this.resourceDataChange(this.tableData)
