@@ -4,11 +4,12 @@
       <el-button @click="reDesign">重新设计</el-button>
       <el-button @click="preview">预览效果</el-button>
       <el-button @click="showJson">查看JSON</el-button>
+      <el-button @click="showHtml">查看HTML</el-button>
       <el-button @click="importJson">导入JSON</el-button>
     </div>
     <div style="display: flex; width: 100%; padding: 20px">
       <div style="flex: 1; margin-right: 30px">
-        <table border cellspacing="0" style="width: 100%" ref="visual_table">
+        <table border cellspacing="0" style="width: 100%" ref="visual_table" id="myTable">
           <tbody>
             <tr v-for="(tr, trIndex) in tableData.trArr" :key="tr.id">
               <td
@@ -205,6 +206,14 @@
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
     </span> -->
     </el-dialog>
+    <!-- 显示HTML -->
+    <el-dialog title="HTML数据" :visible.sync="isShowHtmlDialog" width="70%">
+      <el-input type="textarea" v-model="HtmlData"></el-input>
+      <!-- <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+    </span> -->
+    </el-dialog>
     <!-- 导入JSON -->
     <el-dialog
       title="导入JSON数据"
@@ -231,6 +240,9 @@ export default {
     currentTdH:0,
     currentGe: undefined,    //定义当前格
     deleteTdTopRowspan: 1,  //当前格的rowspan
+
+    HtmlData:'', //html结构数据
+    isShowHtmlDialog: false,//显示html结构数据的弹窗
 
       isShowJsonDialog: false, //控制显示JSON弹窗
       isImportJsonDialog: false, //控制导入JSON弹窗
@@ -966,6 +978,13 @@ console.log("当前格格", this.currentGe)
       });
       this.bindTableData.cols = maxCol;
     },
+    // 查看html结构
+    showHtml() {
+      this.isShowHtmlDialog = true
+      let a = document.getElementById('myTable')
+      this.HtmlData = a.outerHTML
+      
+    }
   },
   computed: {
     JsonData() {
